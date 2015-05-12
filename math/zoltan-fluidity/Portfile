@@ -46,8 +46,8 @@ configure.args  x86_64-darwin-gnu\
 		--enable-f90interface\
                 --enable-zoltan-cppdriver\
 		--disable-examples\
-		--with-parmetis-libdir=${prefix}/lib/petsc/lib\
-		--with-parmetis-incdir=${prefix}/lib/petsc/include
+		--with-parmetis-libdir=${prefix}/lib/petsc-fluidity/lib/ \
+		--with-parmetis-incdir=${prefix}/lib/petsc-fluidity/include
 
 
 build.dir ${worksrcpath}/build
