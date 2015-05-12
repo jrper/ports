@@ -1,0 +1,6 @@
+fluidity 333
+portdir math/fluidity description {Fluidity Navier-Stokes solver} homepage http://www.amcg.ese.ic.ac.uk epoch 0 platforms darwin depends_lib {port:openmpi port:gcc46 port:petsc-fluidity port:zoltan-fluidity port:vtk5 port:gmsh-devel} name fluidity license unknown maintainers jrper categories {math science} version 4.1.6 revision 0
+petsc-fluidity 642
+variants {hdf5 debug} depends_build port:cmake portdir math/petsc-fluidity description {Portable, Extensible Toolkit for Scientific Computation} homepage http://www.mcs.anl.gov/petsc/petsc-as/ epoch 0 platforms darwin depends_lib {port:openmpi port:gcc47} name petsc-fluidity long_description {PETSc, pronounced PET-see (the S is silent), is a suite of data structures and routines for the scalable (parallel) solution of scientific applications modeled by partial differential equations. It employs the MPI standard for all message-passing communication.} maintainers jrper license unknown categories {math science} version 3.5.3 revision 0
+zoltan-fluidity 289
+portdir math/zoltan-fluidity description {Zoltan library.} homepage http://www.cs.sandia.gov/zoltan/ epoch 0 platforms darwin name zoltan-fluidity depends_lib {port:openmpi port:petsc-fluidity port:gcc47} license unknown maintainers jrper categories {math science} version 3.81 revision 0
