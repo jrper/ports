@@ -42,7 +42,7 @@ configure.cxx   ${prefix}/bin/mpicxx
 configure.fc    ${prefix}/bin/mpif90
 configure.f77   ${prefix}/bin/mpif77
 
-configure.ldflags-append -L${prefix}/lib/petsc/lib \
+configure.ldflags-append -L${prefix}/lib/petsc-fluidity/lib \
 			  -L${prefix}/lib/vtk-5.10 \
 			  -L/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib \
 			   -lpython2.7
@@ -63,10 +63,23 @@ configure.args 		--enable-2d-adaptivity\
 		--with-ParMetis=${prefix}/lib/petsc-fluidity
 
 
-build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.7\
-	       OMPI_CC=${prefix}/bin/gcc-mp-4.7\
-	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7\
+build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.7 \
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.7 \
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7
 
 
 
-destroot.destdir DESTDIR=${destroot}${prefix}/fluidity
+pre-destroot {
+    # create additional directory structure for install
+    file mkdir ${destroot}${prefix}/${name}/share/doc/fluidity/examples
+}
+
+
+destroot.args docdir=/share/doc
+
+destroot.env-append  OMPI_CXX=${prefix}/bin/g++-mp-4.7 \
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.7 \
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7 
+
+destroot.destdir DESTDIR=${destroot}${prefix}/${name}
+
