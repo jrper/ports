@@ -1,0 +1,39 @@
+# $Id$
+
+PortSystem	1.0
+
+name		env-modules
+version     3.2.10
+categories devel
+maintainers	jrper
+description	control the user environment via modulefiles
+long_description	The Environment Modules package provides for the\
+	 dynamic modification of a user's environment via modulefiles. \
+	 Each modulefile contains the information needed to configure \
+	 the shell for an application. Once the Modules package is \
+	 initialized, the environment can be modified on a per-module basis \
+	 using the module command which interprets modulefiles.
+
+platforms	darwin
+homepage	http://modules.sourceforge.net
+master_sites	sourceforge:modules
+distname	modules-${version}
+worksrcdir	modules-${version}
+universal_variant   no
+
+checksums           md5 8b097fdcb90c514d7540bb55a3cb90fb\
+		    sha1 a42b03cf59f10c4d06cd8cc1b176f172484a3205
+
+notes       "Add the following line to your .bash_profile if you plan to use\
+            modules on the command line: \n\
+	    \tsource /opt/local/share/Modules/3.2.10/init/bash\n\
+	    \texport MODULEPATH=\$MODULEPATH:~/privatemodules"
+
+
+configure.compiler  llvm-gcc-4.2
+
+configure.pre_args --prefix=${prefix}/share
+
+configure.args CPPFLAGS="-DUSE_INTERP_ERRORLINE"
+
+destroot.destdir DESTDIR=${destroot}
