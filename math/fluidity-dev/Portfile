@@ -1,0 +1,30 @@
+# $Id$
+
+PortSystem	1.0
+
+name		fluidity-dev
+version     0.1
+categories  math science
+maintainers	jrper
+description	Fluidity Navier-Stokes solver
+
+platforms	darwin
+homepage	http://www.amcg.ese.ic.ac.uk
+master_sites    file://Users/origimbo/
+distfiles       privatemodules.tgz
+distname	privatemodules
+worksrcdir	privatemodules
+
+checksum.skip   yes
+
+depends_run-append  port:openmpi-gcc49 \
+		    port:zoltan-fluidity port:vtk5 port:gmsh-devel \
+		    port:py27-numpy port:py27-tkinter port:py27-dateutil \
+		    port:py27-sympy port:udunits port:cgal \
+		    port:netcdf port:netcdf-cxx port:netcdf-fortran \
+		    port:valgrind port:env-modules port:git port:gsed
+
+configure.pre_args --prefix=${prefix}/share/Modules/3.2.10/modulefiles 	
+
+destroot.destdir DESTDIR=${destroot}
+

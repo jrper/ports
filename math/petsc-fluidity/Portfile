@@ -22,20 +22,21 @@ master_sites	ftp://ftp.mcs.anl.gov/pub/petsc/release-snapshots/ \
 		http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/
 distname	petsc-lite-${version}
 worksrcdir	petsc-${version}
+revision         1
 universal_variant   no
 
 checksums           md5 ae5f7a9bd08ce64d451371bcdd0b6f26\
 		    sha1 4c755b3c122f88e38bb5259c748f772545fcaf21
 
 depends_build-append  port:cmake
-depends_lib-append  port:openmpi port:gcc47
+depends_lib-append  port:openmpi-gcc49
 
 
-configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.7\
-	       OMPI_CC=${prefix}/bin/gcc-mp-4.7\
-	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7
+configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9
 
-configure.compiler macports-gcc-4.7
+configure.compiler macports-gcc-4.9
 
 configure.cc    mpicc
 configure.cxx   mpicxx
@@ -48,7 +49,7 @@ configure.args	--prefix=${prefix}/lib/petsc-fluidity \
 		--with-python --with-debugging=0 \
 		--with-pic=fPIC\
 		--with-shared-libraries=0 \
-		--with-mpi-dir=${prefix}/lib/openmpi-mp --with-mpi=1 \
+		--with-mpi-dir=${prefix}/lib/openmpi-gcc49 --with-mpi=1 \
                 --with-lapack-lib=/usr/lib/liblapack.dylib \
 		--with-blas-lib=/usr/lib/libblas.dylib \
         	--download-metis\
@@ -63,9 +64,9 @@ configure.args	--prefix=${prefix}/lib/petsc-fluidity \
 use_parallel_build  no
 build.args     MAKE_NP=4
 
-build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.7\
-	       OMPI_CC=${prefix}/bin/gcc-mp-4.7\
-	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7\
+build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9\
 
 
 

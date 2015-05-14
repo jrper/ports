@@ -20,22 +20,24 @@ universal_variant   no
 checksums           md5 e0587ac69dbc3b17d28f515ed0933719\
 		    sha1 468c30db4b16cb16e5dde05fb951699e1e69527d
 
-depends_lib-append  port:openmpi port:gcc47 port:petsc-fluidity
+depends_lib-append  port:petsc-fluidity
 
-configure.env-append OMPI_CXX=${prefix}/bin/g++-mp-4.7
-configure.env-append OMPI_CC=${prefix}/bin/gcc-mp-4.7
-configure.env-append OMPI_FC=${prefix}/bin/gfortran-mp-4.7
+configure.env-append OMPI_CXX=${prefix}/bin/g++-mp-4.9
+configure.env-append OMPI_CC=${prefix}/bin/gcc-mp-4.9
+configure.env-append OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+
+configure.compiler macports-gcc-4.9
 
 configure.cc    mpicc
 configure.cxx   mpicxx
 configure.fc    mpif90
 configure.f77   bin/mpif77
 
-configure.compiler macports-gcc-4.7
+build.env      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9
 
-build.env      OMPI_CXX=${prefix}/bin/g++-mp-4.7\
-	       OMPI_CC=${prefix}/bin/gcc-mp-4.7\
-	       OMPI_FC=${prefix}/bin/gfortran-mp-4.7
+configure.compiler macports-gcc-4.9
 
 configure.cmd   mkdir ${worksrcpath}/build && cd ${worksrcpath}/build && ../configure
 configure.args  x86_64-darwin-gnu\
@@ -48,7 +50,6 @@ configure.args  x86_64-darwin-gnu\
 		--disable-examples\
 		--with-parmetis-libdir=${prefix}/lib/petsc-fluidity/lib/ \
 		--with-parmetis-incdir=${prefix}/lib/petsc-fluidity/include
-
 
 build.dir ${worksrcpath}/build
 build.jobs 1
