@@ -1,0 +1,73 @@
+# $Id$
+
+PortSystem	1.0
+
+name		libspud
+version     	1.1.5
+categories  	math science
+maintainers	jrper
+description	Spud: a system for problem description
+long_description Spud is a generic system for defining, writing and processing options files for scientific computer models. The interfaces to scientific computer models are frequently primitive, under-documented and ad-hoc text files. This makes using and developing the model in question difficult and error-prone. With Spud, the model developer need only write a rules file (schema) which defines the options which the model takes and the relationship between them. The Spud component Diamond then provides an automatically generated graphical user interface which guides the user and validates the user's input against the schema. Diamond writes out an xml options file for use in Spud. The developer then uses libspud to read the options file into the model. Libspud can read any valid options file without further code modifications and makes the options available at any point in the model code at which they are required. Spud further provides the facility for the schema to be self-documenting and Diamond presents this documentation to the model user in a context-sensitive manner.
+
+platforms	darwin
+homepage	https://launchpad.net/spud
+distname	libspud
+worksrcdir	libspud
+universal_variant   no
+
+fetch.type	bzr
+bzr.url		lp:spud
+bzr.revision    536	
+
+checksum.skip	
+
+depends_build-append port:openmpi-gcc49 
+depends_lib-append  port:py27-numpy port:py27-tkinter\
+		     port:py27-dateutil port:py27-pygtk port:py27-lxml
+		    
+configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9\
+	       PETSC_DIR=${prefix}/lib/petsc-fluidity
+
+configure.compiler macports-gcc-4.9
+
+configure.cc    ${prefix}/bin/mpicc
+configure.cxx   ${prefix}/bin/mpicxx
+configure.fc    ${prefix}/bin/mpif90
+configure.f77   ${prefix}/bin/mpif77
+
+configure.ldflags-append  -L${prefix}/Library/Frameworks/Python.framework/Versions/2.7/lib \
+			   -lpython2.7
+configure.fcflags-append  -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+configure.cxxflags-append -I${prefix}/include -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+configure.cflags-append  -I${prefix}/include -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+
+post-patch {
+	   reinplace "s|/usr/local|${prefix}|g" ${worksrcpath}/Makefile.in ${worksrcpath}/configure
+reinplace "s|python setup.py install --prefix=\$(DESTDIR)@prefix@|python setup.py install --prefix=${frameworks_dir}/Python.framework/Versions/2.7 --root=${destroot}|g" ${worksrcpath}/Makefile.in
+}
+
+build.type            gnu
+build.target          {}
+build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9 \
+	       	      OMPI_CC=${prefix}/bin/gcc-mp-4.9 \
+	       	      OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+
+destroot.args docdir=/share/doc
+
+destroot.env-append  OMPI_CXX=${prefix}/bin/g++-mp-4.9 \
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9 \
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+
+destroot.destdir DESTDIR=${destroot}
+
+post-destroot {
+    # move the binaries where they'll be found
+    file rename ${destroot}${frameworks_dir}/Python.framework/Versions/2.7/bin/diamond ${destroot}${prefix}/bin/diamond
+    file rename ${destroot}${frameworks_dir}/Python.framework/Versions/2.7/bin/dxdiff ${destroot}${prefix}/bin/dxdiff
+file mkdir ${destroot}${prefix}/share
+file rename ${destroot}${frameworks_dir}/Python.framework/Versions/2.7/share/diamond ${destroot}${prefix}/share/diamond/
+reinplace "s|/usr/share|${prefix}/share|g" ${destroot}${prefix}/bin/diamond ${destroot}${prefix}/bin/dxdiff
+}
+
