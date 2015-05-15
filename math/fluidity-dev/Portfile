@@ -3,19 +3,21 @@
 PortSystem	1.0
 
 name		fluidity-dev
-version     0.1
+version     0.2.0
 categories  math science
 maintainers	jrper
-description	Fluidity Navier-Stokes solver
+description	Fluidity development enivronment
 
 platforms	darwin
-homepage	http://www.amcg.ese.ic.ac.uk
-master_sites    file://Users/origimbo/
-distfiles       privatemodules.tgz
-distname	privatemodules
-worksrcdir	privatemodules
+homepage	http://jrper.github.io
+master_sites    https://github.com/jrper/mac_modulefiles/archive/
+distfiles       v${version}.tar.gz
+distname	mac_modulefiles-${version}
+worksrcdir	mac_modulefiles-${version}
 
 checksum.skip   yes
+#checksums	md5 de434ac76325f0287cfcc56eb54f631d \
+#		sha1 3f4b90a259c03a661c6034e216524b2f5cf25303
 
 depends_run-append  port:openmpi-gcc49 \
 		    port:zoltan-fluidity port:vtk5 port:gmsh-devel \
