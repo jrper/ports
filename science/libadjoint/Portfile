@@ -1,0 +1,67 @@
+# $Id$
+
+PortSystem	1.0
+PortGroup	cmake 1.0
+
+name		libadjoint
+version     	1.4
+categories  	math science
+maintainers	jrper
+description	libadjoint
+long_description libadjoint is a library for the high-level algorithmic differentiation of scientific models. It's mainly used by dolfin-adjoint.
+
+platforms	darwin
+homepage	https://bitbucket.org/dolfin-adjoint/libadjoint
+master_sites	https://bitbucket.org/dolfin-adjoint/libadjoint/downloads
+distname	libadjoint-${version}
+worksrcdir	libadjoint-${version}
+universal_variant   no	
+
+checksums	md5 eff57ed239ea684e5b84ea7b42fd6cc2 \
+		sha256 41f2d228b7eaba835cbfc9cdeec402cfdaf08a4d58670a7154ccb4c77a681a2d
+
+depends_build-append port:openmpi-gcc49 
+depends_lib-append  port:py27-numpy port:py27-tkinter\
+		     port:py27-dateutil port:py27-pygtk port:py27-lxml
+		    
+configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9\
+	       PETSC_DIR=${prefix}/lib/petsc-fluidity
+
+configure.compiler macports-gcc-4.9
+
+configure.cc    ${prefix}/bin/mpicc
+configure.cxx   ${prefix}/bin/mpicxx
+configure.fc    ${prefix}/bin/mpif90
+configure.f77   ${prefix}/bin/mpif77
+
+
+configure.ldflags-append  -L${prefix}/Library/Frameworks/Python.framework/Versions/2.7/lib \
+			   -lpython2.7
+configure.fcflags-append  -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+configure.cxxflags-append -I${prefix}/include -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+configure.cflags-append  -I${prefix}/include -I${prefix}/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+
+build.type            gnu
+build.target          {}
+build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9 \
+	       	      OMPI_CC=${prefix}/bin/gcc-mp-4.9 \
+	       	      OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+use_parallel_build  no
+
+destroot.args docdir=/share/doc
+
+destroot.env-append  OMPI_CXX=${prefix}/bin/g++-mp-4.9 \
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9 \
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+
+destroot.destdir DESTDIR=${destroot}
+
+post-destroot {
+    # move the fortran modfile where it'll be found
+    file rename ${worksrcpath}/src/libadjoint.mod ${destroot}${prefix}/include/libadjoint.mod
+    file rename ${worksrcpath}/src/libadjoint_data_structures.mod ${destroot}${prefix}/include/libadjoint_data_structures.mod
+    file rename ${worksrcpath}/src/libadjoint_petsc_data_structures.mod ${destroot}${prefix}/include/libadjoint_petsc_data_structures.mod
+    file rename ${worksrcpath}/src/libadjoint_test_tools.mod ${destroot}${prefix}/include/libadjoint_test_tools.mod
+}
