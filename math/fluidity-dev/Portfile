@@ -19,6 +19,10 @@ checksum.skip   yes
 #checksums	md5 de434ac76325f0287cfcc56eb54f631d \
 #		sha1 3f4b90a259c03a661c6034e216524b2f5cf25303
 
+universal_variant no
+default_variants +python27
+variant python27 description {Build against python 27} {}
+
 depends_run-append  port:openmpi-gcc49 \
 		    port:zoltan-fluidity port:vtk5 port:gmsh-devel \
 		    port:py27-numpy port:py27-tkinter port:py27-dateutil \

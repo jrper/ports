@@ -25,6 +25,8 @@ git.branch	origin/mac_friendly
 
 checksum.skip   yes
 
+default_variants +python27
+variant python27 description {Build against python 27} {}
 
 depends_build-append port:zoltan-fluidity port:valgrind \
  port:udunits port:cgal 
