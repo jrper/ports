@@ -3,4 +3,5 @@ fluidity 631
 fluidity-dev 1452
 petsc-fluidity 1990
 zoltan-fluidity 2657
-libspud 2953
+libadjoint 2953
+libspud 3527
