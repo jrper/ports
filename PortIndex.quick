@@ -1,7 +1,8 @@
 env-modules 0
-fluidity 631
-fluidity-dev 1452
-petsc-fluidity 1990
-zoltan-fluidity 2657
-libadjoint 2953
-libspud 3527
+vtk5 631
+fluidity 1420
+fluidity-dev 2241
+petsc-fluidity 2779
+zoltan-fluidity 3446
+libadjoint 3742
+libspud 4316
