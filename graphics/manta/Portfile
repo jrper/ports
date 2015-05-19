@@ -1,0 +1,109 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 133629 2015-03-07 14:39:20Z michaelld@macports.org $
+
+PortSystem          1.0
+#PortGroup           cmake 1.0
+#PortGroup           qt4 1.0
+
+name                manta
+version             4.3.1
+revision            1
+
+categories          graphics devel
+platforms           darwin
+license             BSD
+maintainers         nomaintainer
+
+description         Manta Ray Tracer
+long_description    Manta Ray Tracer
+
+homepage            http://mantawiki.sci.utah.edu/manta/Main_Page
+
+
+fetch.type          svn
+fetch.user          anonymous
+svn.url             https://gforge.sci.utah.edu/svn/Manta/trunk/
+svn.revision        2542
+svn.method          checkout
+svn.args            --username ${fetch.user} --password bob
+worksrcdir          trunk
+
+depends_build-append    port:readline
+
+configure.dir ${workpath}/build
+
+set cmake_share_module_dir ${prefix}/share/cmake/Modules
+
+pre-configure {
+    file mkdir ${configure.dir}
+}
+
+
+configure.compiler      apple-gcc-4.2
+
+configure.cmd         ${prefix}/bin/cmake
+
+configure.pre_args     -DCMAKE_INSTALL_PREFIX:PATH=${prefix}/lib/manta
+
+configure.args  \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DCMAKE_C_COMPILER_PATH=${configure.cc} \
+    -DCMAKE_CXX_COMPILER_PATH=${configure.cxx} \
+-DX11_ICE_LIB:FILEPATH=/usr/X11/lib/libICE.dylib \
+-DX11_SM_LIB:FILEPATH=/usr/X11/lib/libSM.dylib \
+-DX11_X11_LIB:FILEPATH=/usr/X11/lib/libX11.dylib \
+-DX11_XRes_LIB:FILEPATH=/usr/X11R6/lib/libXRes.dylib \
+-DX11_XTest_LIB:FILEPATH=/usr/X11/lib/libXtst.dylib \
+-DX11_Xau_LIB:FILEPATH=/usr/X11/lib/libXau.dylib \
+-DX11_Xcomposite_LIB:FILEPATH=/usr/X11/lib/libXcomposite.dylib \
+-DX11_Xcursor_LIB:FILEPATH=/usr/X11/lib/libXcursor.dylib \
+-DX11_Xdamage_LIB:FILEPATH=/usr/X11/lib/libXdamage.dylib \
+-DX11_Xdmcp_LIB:FILEPATH=/usr/X11/lib/libXdmcp.dylib \
+-DX11_Xext_LIB:FILEPATH=/usr/X11/lib/libXext.dylib \
+-DX11_Xfixes_LIB:FILEPATH=/usr/X11/lib/libXfixes.dylib \
+-DX11_Xft_LIB:FILEPATH=/usr/X11/lib/libXft.dylib \
+-DX11_Xi_LIB:FILEPATH=/usr/X11/lib/libXi.dylib \
+-DX11_Xinerama_LIB:FILEPATH=/usr/X11/lib/libXinerama.dylib \
+-DX11_Xinput_LIB:FILEPATH=/usr/X11/lib/libXi.dylib \
+-DX11_Xkbfile_LIB:FILEPATH=/usr/X11/lib/libxkbfile.dylib \
+-DX11_Xmu_LIB:FILEPATH=/usr/X11/lib/libXmu.dylib \
+-DX11_Xpm_LIB:FILEPATH=/usr/X11/lib/libXpm.dylib \
+-DX11_Xrandr_LIB:FILEPATH=/usr/X11/lib/libXrandr.dylib \
+-DX11_Xrender_LIB:FILEPATH=/usr/X11/lib/libXrender.dylib \
+-DX11_Xscreensaver_LIB:FILEPATH=/usr/X11/lib/libXss.dylib \
+-DX11_Xt_LIB:FILEPATH=/usr/X11/lib/libXt.dylib \
+-DX11_Xv_LIB:FILEPATH=/usr/X11/lib/libXv.dylib \
+-DX11_Xxf86misc_LIB:FILEPATH=/usr/X11R6/lib/libXxf86misc.dylib \
+-DX11_Xxf86vm_LIB:FILEPATH=/usr/X11R6/lib/libXxf86vm.dylib
+    
+
+ configure.post_args ${worksrcpath}
+    
+build.dir ${configure.dir}
+
+
+
+
+
+use_parallel_build  yes
+
+depends_lib-append    port:python27
+
+configure.args-append   \
+                -DPYTHON_LIBRARY:FILEPATH=${prefix}/lib/libpython2.7.dylib \
+                -DPYTHON_EXECUTABLE:FILEPATH=${prefix}/bin/python2.7 \
+                -DPYTHON_INCLUDE_DIR:PATH=${frameworks_dir}/Python.framework/Versions/2.7/Headers 
+
+post-destroot  {
+    file rename ${build.dir}/bin/manta ${destroot}${prefix}/bin/manta 
+    file mkdir ${destroot}${prefix}/lib/manta/bin/
+    file rename ${build.dir}/bin/atomic_counter ${destroot}${prefix}/lib/manta/bin/atomic_counter 
+    foreach libname [glob -tails -directory ${build.dir}/lib/ lib*.dylib] {
+        foreach libname2 [glob -tails -directory ${destroot}${prefix}/lib/manta/lib lib*.dylib] {
+            system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/lib/manta/lib/${libname2}"
+        }
+        system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/bin/manta"
+        system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/lib/manta/bin/atomic_counter"
+    }
+}
