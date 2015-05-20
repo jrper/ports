@@ -102,6 +102,7 @@ post-destroot  {
     foreach libname [glob -tails -directory ${build.dir}/lib/ lib*.dylib] {
         foreach libname2 [glob -tails -directory ${destroot}${prefix}/lib/manta/lib lib*.dylib] {
             system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/lib/manta/lib/${libname2}"
+            system "install_name_tool -id ${prefix}/lib/manta/lib/${libname2} ${destroot}${prefix}/lib/manta/lib/${libname2}"
         }
         system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/bin/manta"
         system "install_name_tool -change ${build.dir}/lib/${libname} ${prefix}/lib/manta/lib/${libname} ${destroot}${prefix}/lib/manta/bin/atomic_counter"
