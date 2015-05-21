@@ -1,0 +1,89 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 133629 2015-03-07 14:39:20Z michaelld@macports.org $
+
+PortSystem          1.0
+#PortGroup           cmake 1.0
+#PortGroup           qt4 1.0
+
+name                paraview-dev
+version             4.3.1
+revision            1
+
+categories          graphics devel
+platforms           darwin
+license             BSD
+maintainers         nomaintainer
+
+description         ParaView
+long_description    Unix-style installation of paraview and its accompanying development libraries. For casual use, the binary installations are much more appropriate.
+
+homepage            http://www.paraview.org/
+
+master_sites        http://www.paraview.org/files/v4.3/
+
+distname            ParaView-v${version}-source
+distfiles           ParaView-v${version}-source${extract.suffix}
+checksums           ParaView-v${version}-source${extract.suffix} \
+                    md5     d03d3ab504037edd21306413dff64293 \
+                    sha1    9c0666ea13ebde3fe9a92cf24255c42a6a20cf79
+
+
+depends_build-append    port:readline
+
+configure.dir ${workpath}/build
+
+set cmake_share_module_dir ${prefix}/share/cmake/Modules
+
+pre-configure {
+    file mkdir ${configure.dir}
+}
+
+
+configure.compiler      apple-gcc-4.2
+
+configure.cmd         ${prefix}/bin/cmake
+
+configure.pre_args     -DCMAKE_INSTALL_PREFIX:PATH=${prefix}
+
+configure.args  \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
+    -DPARAVIEW_ENABLE_FFMPEG:BOOL=ON \
+    -DPARAVIEW_USE_MPI:BOOL=ON \
+    -DPARAVIEW_INSTALL_DEVELOPMENT_FILES:BOOL=ON \
+    -DVTK_IOS_BUILD:BOOL=OFF \
+    -DVTK_ANDROID_BUILD:BOOL=OFF \
+    -DPARAVIEW_DO_UNIX_STYLE_INSTALLS:BOOL=ON 
+
+
+default_variants +manta
+variant manta description {Build Manta ray tracing plugin} {
+depends_lib-append      port:manta
+configure.args-append   \
+    -DPARAVIEW_BUILD_PLUGIN_MantaView:BOOL=ON \
+    -DMANTA_BUILD=/opt/local/lib/manta \
+    -DMANTA_SOURCE=/opt/local/lib/manta/include
+}
+
+ configure.post_args ${worksrcpath}
+    
+build.dir ${configure.dir}
+
+
+
+
+
+use_parallel_build  yes
+
+depends_lib-append    port:python27
+
+configure.args-append   \
+                -DPYTHON_LIBRARY:FILEPATH=${prefix}/lib/libpython2.7.dylib \
+                -DPYTHON_EXECUTABLE:FILEPATH=${prefix}/bin/python2.7 \
+                -DPYTHON_INCLUDE_DIR:PATH=${frameworks_dir}/Python.framework/Versions/2.7/Headers 
+
+
+post-destroot  {
+    file rename ${destroot}${destroot}${prefix}/bin/paraview ${destroot}${prefix}/bin/paraview 
+}

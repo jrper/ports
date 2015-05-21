@@ -1,9 +1,10 @@
 env-modules 0
 manta 631
-vtk5 1037
-fluidity 1826
-fluidity-dev 2647
-petsc-fluidity 3185
-zoltan-fluidity 3852
-libadjoint 4148
-libspud 4722
+paraview-dev 1037
+vtk5 1552
+fluidity 2341
+fluidity-dev 3162
+petsc-fluidity 3700
+zoltan-fluidity 4367
+libadjoint 4663
+libspud 5237
