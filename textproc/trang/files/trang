@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ "$1" = "classpath" ]
+then
+  CLASSPATH="$2"
+  shift 2
+fi
+
+JAVACLASSES=@prefix@/share/java
+CLASSPATH="${CLASSPATH:-.}:$JAVACLASSES/trang.jar"
+
+export CLASSPATH
+
+exec java com.thaiopensource.relaxng.translate.Driver "$@"

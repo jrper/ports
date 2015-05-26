@@ -24,6 +24,7 @@ checksum.skip
 depends_build-append port:openmpi-gcc49 
 depends_lib-append  port:py27-numpy port:py27-tkinter\
 		     port:py27-dateutil port:py27-pygtk port:py27-lxml
+depends_run-append port:trang
 		    
 configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
