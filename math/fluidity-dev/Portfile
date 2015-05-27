@@ -34,3 +34,9 @@ configure.pre_args --prefix=${prefix}/share/Modules/3.2.10/modulefiles
 
 destroot.destdir DESTDIR=${destroot}
 
+platform darwin 14 {
+	 post-destroot {
+	 xinstall -m 755 -d ${destroot}${prefix}/include/dispatch
+	 xinstall -m 755 ${portpath}/files/object.h ${destroot}${prefix}/include/dispatch/object.h
+	 }
+}
