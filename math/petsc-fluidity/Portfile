@@ -38,18 +38,23 @@ configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 
 configure.compiler macports-gcc-4.9
 
-configure.cc    mpicc
-configure.cxx   mpicxx
-configure.fc    mpif90
-configure.f77   mpif77
+configure.cc    mpicc-openmpi-gcc49
+configure.cxx   mpicxx-openmpi-gcc49
+configure.fc    mpif90-openmpi-gcc49
+configure.f77   mpif77-openmpi-gcc49
 
 configure.pre_args  --prefix=${prefix}/lib/petsc-fluidity
 
 configure.args	--prefix=${prefix}/lib/petsc-fluidity \
 		--with-python --with-debugging=0 \
 		--with-pic=fPIC\
+		--with-cc=${configure.cc} \
+		--with-cx=${configure.cxx} \
+		--with-fc=${configure.fc} \
+		--with-mpiexec=mpiexec-openmpi-gcc49 \
 		--with-shared-libraries=0 \
-		--with-mpi-dir=${prefix}/lib/openmpi-gcc49 --with-mpi=1 \
+		--with-mpi-lib=${prefix}/lib/openmpi-gcc49/libmpi.dylib --with-mpi=1 \
+		--with-mpi-include=${prefix}/include/openmpi-gcc49 \
                 --with-lapack-lib=/usr/lib/liblapack.dylib \
 		--with-blas-lib=/usr/lib/libblas.dylib \
         	--download-metis\
