@@ -3,7 +3,7 @@
 PortSystem	1.0
 
 name		fluidity-dev
-version     0.2.0
+version     0.3.0
 categories  math science
 maintainers	jrper
 description	Fluidity development enivronment
@@ -28,14 +28,20 @@ depends_run-append  port:openmpi-gcc49 \
 		    port:py27-numpy port:py27-tkinter port:py27-dateutil \
 		    port:py27-sympy port:udunits port:cgal \
 		    port:netcdf port:netcdf-cxx port:netcdf-fortran \
-		    port:env-modules port:git port:gsed
+		    port:env-modules port:git port:gsed port:exodusii
 
 configure.pre_args --prefix=${prefix}/share/Modules/3.2.10/modulefiles 	
 
 destroot.destdir DESTDIR=${destroot}
 
+post-destroot {
+	 xinstall -m 755 -d ${destroot}${prefix}/lib/${name}/bin
+	 system "ln -fs  ${prefix}/bin/python2.7 ${build.dir}/python"
+	 xinstall -m 755 ${build.dir}/python ${destroot}${prefix}/lib/${name}/bin/python
+}
+
 platform darwin 14 {
-	 post-destroot {
+	 post-destroot-append {
 	 xinstall -m 755 -d ${destroot}${prefix}/include/dispatch
 	 xinstall -m 755 ${portpath}/files/object.h ${destroot}${prefix}/include/dispatch/object.h
 	 }
