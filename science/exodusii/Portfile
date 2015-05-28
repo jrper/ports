@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 133629 2015-03-07 14:39:20Z michaelld@macports.org $
+
+PortSystem          1.0
+PortGroup           cmake 1.0
+
+name                exodusii
+version             6.09
+
+categories          science math
+platforms           darwin freebsd
+license             BSD
+maintainers         nomaintainer
+
+description         ExodusII
+long_description    The ExodusII library
+
+master_sites        sourceforge
+
+distname            exodus-${version}
+distfiles           exodus-${version}${extract.suffix}
+checksums           md5 2c139fc98706a04778d5607ab80b5d4d \
+                    sha1 070d35a614d655dfe55d47ba5e0502247380fe28
+
+depends_build-append    port:hdf5 port:netcdf
+
+configure.compiler macports-gcc-4.9
+configure.args-append  \
+
+use_parallel_build  yes
+
+post-extract {
+    set worksrcpath ${worksrcpath}/exodus
+    file delete ${worksrcpath}/CMakeCache.txt
+} 
+
+configure.args-append \
+-DBUILD_SHARED=ON \
+-DCMAKE_Fortran_COMPILER:FILEPATH=${configure.fc} \
+-DNETCDF_NCDUMP:PATH=${prefix}/bin/ncdump \
+-DNETCDF_SO_ROOT:PATH=${prefix}/lib \
+-DNETCDF_INCLUDE_DIR:PATH=${prefix}/include \
+-DNETCDF_LIBRARY:PATH=${prefix}/lib/libnetcdf.a \
+-DHDF5HL_LIBRARY:PATH=${prefix}/lib/libhdf5_hl.a \
+-DHDF5_LIBRARY:PATH=${prefix}/lib/libhdf5.a \
+-DPYTHON_INSTALL:PATH=${frameworks_dir}/Python.framework/Versions/2.7/lib/python2.7/site-packages/
+
