@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 133629 2015-03-07 14:39:20Z michaelld@macports.org $
+
+PortSystem          1.0
+PortGroup           cmake 1.0
+
+name                exodusii-v
+version             5.26
+
+categories          science math
+platforms           darwin freebsd
+license             BSD
+maintainers         nomaintainer
+
+description         ExodusII
+long_description    The ExodusII library
+
+master_sites        sourceforge:exodusii
+
+distname            exodus-${version}
+distfiles           exodus-${version}-1${extract.suffix}
+checksums           md5 f9b9c0c563f8ada2fc14ce14abe79dae \
+                    sha256 9b681396b345d223bbd1b36b67173d1779afed5fabd0929b51e41ce1f830db2e
+
+conflicts           exodusii
+
+depends_build-append    port:hdf5 port:netcdf
+
+configure.compiler macports-gcc-4.9
+configure.args-append  \
+
+use_parallel_build  yes
+
+configure.args-append \
+-DBUILD_SHARED=ON \
+-DNETCDF_NCDUMP:PATH=${prefix}/bin/ncdump \
+-DNETCDF_INCLUDE_DIR:PATH=${prefix}/include \
+-DNETCDF_LIBRARY:PATH=${prefix}/lib/libnetcdf.dylib \
+-DHDF5HL_LIBRARY:PATH=${prefix}/lib/libhdf5_hl.dylib \
+-DHDF5_LIBRARY:PATH=${prefix}/lib/libhdf5.a

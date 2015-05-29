@@ -28,7 +28,7 @@ depends_run-append  port:openmpi-gcc49 \
 		    port:py27-numpy port:py27-tkinter port:py27-dateutil \
 		    port:py27-sympy port:udunits port:cgal \
 		    port:netcdf port:netcdf-cxx port:netcdf-fortran \
-		    port:env-modules port:git port:gsed port:exodusii
+		    port:env-modules port:git port:gsed port:exodusii-v
 
 configure.pre_args --prefix=${prefix}/share/Modules/3.2.10/modulefiles 	
 
