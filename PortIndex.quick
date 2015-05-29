@@ -4,10 +4,10 @@ paraview-dev 1085
 vtk5 1600
 fluidity 2389
 fluidity-dev 3210
-petsc-fluidity 3750
-zoltan-fluidity 4417
-exodusii 4713
-exodusii-v 5059
-libadjoint 5409
-libspud 5983
-trang 7517
+petsc-fluidity 3830
+zoltan-fluidity 4497
+exodusii 4793
+exodusii-v 5139
+libadjoint 5489
+libspud 6063
+trang 7597

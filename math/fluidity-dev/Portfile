@@ -46,3 +46,11 @@ platform darwin 14 {
 	 xinstall -m 755 ${portpath}/files/object.h ${destroot}${prefix}/include/dispatch/object.h
 	 }
 }
+
+variant doc description {Setup environment to build Fluidity manual} {
+	depends_run-append	 port:transfig \
+	port:texlive-pstricks port:texlive \
+	port:texlive-latex-extra
+}
+
+default_variants +doc
