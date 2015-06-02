@@ -41,7 +41,7 @@ post-destroot {
 }
 
 platform darwin 14 {
-	 post-destroot-append {
+	 post-configure {
 	 xinstall -m 755 -d ${destroot}${prefix}/include/dispatch
 	 xinstall -m 755 ${portpath}/files/object.h ${destroot}${prefix}/include/dispatch/object.h
 	 }
