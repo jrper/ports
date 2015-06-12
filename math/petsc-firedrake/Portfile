@@ -1,0 +1,92 @@
+# $Id$
+
+PortSystem	1.0
+
+name		petsc-firedrake
+version     3.5.3
+categories  math science
+maintainers	jrper
+description	Portable, Extensible Toolkit for Scientific Computation
+long_description	PETSc, pronounced PET-see (the S is silent), is a suite \
+        of data structures and routines for the scalable (parallel) solution \
+        of scientific applications modeled by partial differential equations. \
+        It employs the MPI standard for all message-passing communication.
+
+notes       "Add the following line to your .bash_profile if you plan to use\
+            the PETSC makefile rules in $prefix/lib/petsc-fluidity/conf: \n\
+            \texport PETSC_DIR=${prefix}/lib/petsc-fluidity"
+
+platforms	darwin
+homepage	http://www.mcs.anl.gov/petsc/petsc-as/
+master_sites	https://bitbucket.org/mapdes/petsc/get
+distname	firedrake
+extract.suffix  .tar.bz2
+use_bzip2       yes
+worksrcdir	mapdes-petsc-f6dae198d6c3
+revision         1
+universal_variant   no
+
+checksum.skip           yes
+
+depends_build-append  port:cmake port:triangle
+depends_lib-append  port:openmpi-gcc49
+
+
+configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9
+
+configure.compiler macports-gcc-4.9
+
+configure.cc    mpicc-openmpi-gcc49
+configure.cxx   mpicxx-openmpi-gcc49
+configure.fc    mpif90-openmpi-gcc49
+configure.f77   mpif77-openmpi-gcc49
+
+configure.pre_args  --prefix=${prefix}/lib/petsc-firedrake
+
+configure.args	--with-python --with-debugging=0 \
+		--with-cc=${configure.cc} \
+		--with-cxx=${configure.cxx} \
+		--with-fc=${configure.fc} \
+		--with-mpiexec=mpiexec-openmpi-gcc49 \
+		--with-mpi-lib=${prefix}/lib/openmpi-gcc49/libmpi.dylib\
+	        --with-mpi=1 \
+		--with-mpi-include=${prefix}/include/openmpi-gcc49 \
+                --with-lapack-lib=/usr/lib/liblapack.dylib \
+		--with-blas-lib=/usr/lib/libblas.dylib 
+		--with-triangle-dir=/opt/local \
+#        	--download-ctetgen \
+
+#		--download-chaco
+
+destroot.destdir DESTDIR=${destroot}${prefix}/lib/petsc-firedrake
+
+use_parallel_build  no
+build.args     MAKE_NP=4
+
+build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
+	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
+	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9\
+
+
+
+
+
+
+# disabled for now; no mpi support in fftw port yet
+# variant fftw description {build with fftw support} {
+#   configure.args-append   --with-fftw=1 --with-fftw-dir=${prefix}
+#   depends_lib-append  port:fftw-3
+# }
+
+variant hdf5 description {build with support for HDF5 file format} {
+    configure.args-append   --with-hdf5=1 --with-hdf5-dir=${prefix}
+    depends_lib-append	port:hdf5-18
+}
+
+variant debug description {build with debug support} {
+    configure.args-delete   --with-debugging=0
+    configure.args-append   --with-debugging=1
+}
+
