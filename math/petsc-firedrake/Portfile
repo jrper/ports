@@ -54,16 +54,19 @@ configure.args	--with-python --with-debugging=0 \
 	        --with-mpi=1 \
 		--with-mpi-include=${prefix}/include/openmpi-gcc49 \
                 --with-lapack-lib=/usr/lib/liblapack.dylib \
-		--with-blas-lib=/usr/lib/libblas.dylib 
-		--with-triangle-dir=/opt/local \
-#        	--download-ctetgen \
-
-#		--download-chaco
+		--with-blas-lib=/usr/lib/libblas.dylib \
+		--with-triangle-dir=/opt/local/lib/firedrake \
+        	--with-tetgen-dir=/opt/local \
+		--with-chaco-dir=/opt/local \
+		--with-clanguage=cxx
 
 destroot.destdir DESTDIR=${destroot}${prefix}/lib/petsc-firedrake
 
+build.env-append  DESTDIR=${destroot}${prefix}/lib/petsc-firedrake 
+
 use_parallel_build  no
 build.args     MAKE_NP=4
+build.type gnu
 
 build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
