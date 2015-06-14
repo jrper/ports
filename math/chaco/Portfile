@@ -1,0 +1,35 @@
+# $Id: Portfile 102680 2013-02-06 19:26:32Z mmoll@macports.org $
+
+PortSystem		1.0
+
+name			chaco
+version			2.2-p2
+revision                1
+categories		science math
+maintainers		nomaintainer
+
+platforms		darwin
+
+master_sites		http://ftp.mcs.anl.gov/pub/petsc/externalpackages/
+distname		Chaco-${version}
+
+worksrcdir		${distname}/code
+
+checksum.skip   yes
+
+patchfiles          patch-src-Makefile.diff
+
+configure.compiler macports-gcc-4.9
+
+use_configure		no
+
+build.target ../exec/chaco libchaco
+
+destroot	{
+    xinstall -d ${destroot}${prefix}/lib
+    xinstall -d ${destroot}${prefix}/bin
+    xinstall -m 755 -W ${worksrcpath}/../exec chaco ${destroot}${prefix}/bin
+    xinstall -m 755 -W ${worksrcpath}/../exec libchaco.a ${destroot}${prefix}/lib
+}
+
+
