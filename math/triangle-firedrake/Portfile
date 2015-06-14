@@ -1,0 +1,41 @@
+# $Id: Portfile 102680 2013-02-06 19:26:32Z mmoll@macports.org $
+
+PortSystem		1.0
+
+name			triangle-firedrake
+version			1.3
+revision                1
+categories		science
+license			Noncommercial Copyleft
+maintainers		nomaintainer
+description		A Two-Dimensional Quality Mesh Generator and Delaunay Triangulator
+long_description	Triangle generates exact Delaunay triangulations, \
+    constrained Delaunay triangulations, conforming Delaunay \
+    triangulations, Voronoi diagrams, and high-quality triangular \
+    meshes. The latter can be generated with no small or large \
+    angles, and are thus suitable for finite element analysis.
+
+platforms		darwin
+
+homepage		http://www.cs.cmu.edu/~quake/triangle.html
+master_sites	http://ftp.mcs.anl.gov/pub/petsc/externalpackages
+distname	Triangle
+
+checksum.skip   yes
+
+post-patch	{
+    reinplace "s/include make.inc//" ${worksrcpath}/makefile
+}
+
+build.target libtriangle.a
+build.env-append       TRIANGLELIB=libtriangle.a
+
+use_configure		no
+
+
+destroot	{
+    xinstall -d ${destroot}${prefix}/lib/firedrake/include
+    xinstall -d ${destroot}${prefix}/lib/firedrake/lib
+    xinstall -m 644 -W ${worksrcpath} src/triangle.h ${destroot}${prefix}/lib/firedrake/include
+    xinstall -m 755 -W ${worksrcpath} libtriangle.a ${destroot}${prefix}/lib/firedrake/lib
+}
