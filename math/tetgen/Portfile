@@ -1,0 +1,35 @@
+# $Id: Portfile 102680 2013-02-06 19:26:32Z mmoll@macports.org $
+
+PortSystem		1.0
+
+name			tetgen
+version			1.4.3
+revision                1
+categories		science math
+maintainers		nomaintainer
+
+platforms		darwin
+
+homepage		http://wias-berlin.de/software/tetgen/
+master_sites		http://tetgen.org/files/
+distname		${name}${version}
+
+checksum.skip   yes
+
+
+configure.compiler macports-gcc-4.9
+
+use_configure		no
+
+build.target tetgen tetlib
+
+destroot	{
+    xinstall -d ${destroot}${prefix}/include
+    xinstall -d ${destroot}${prefix}/lib
+    xinstall -d ${destroot}${prefix}/bin
+    xinstall -m 644 -W ${worksrcpath} tetgen.h ${destroot}${prefix}/include
+    xinstall -m 755 -W ${worksrcpath} tetgen ${destroot}${prefix}/bin
+    xinstall -m 755 -W ${worksrcpath} libtet.a ${destroot}${prefix}/lib
+}
+
+
