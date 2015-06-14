@@ -2,6 +2,7 @@
 # $Id: Portfile 133629 2015-03-07 14:39:20Z michaelld@macports.org $
 
 PortSystem          1.0
+
 #PortGroup           cmake 1.0
 #PortGroup           qt4 1.0
 
@@ -54,7 +55,7 @@ configure.args  \
     -DPARAVIEW_INSTALL_DEVELOPMENT_FILES:BOOL=ON \
     -DVTK_IOS_BUILD:BOOL=OFF \
     -DVTK_ANDROID_BUILD:BOOL=OFF \
-    -DPARAVIEW_DO_UNIX_STYLE_INSTALLS:BOOL=ON 
+    -DPARAVIEW_DO_UNIX_STYLE_INSTALLS:BOOL=ON
 
 
 default_variants +manta
@@ -62,8 +63,8 @@ variant manta description {Build Manta ray tracing plugin} {
 depends_lib-append      port:manta
 configure.args-append   \
     -DPARAVIEW_BUILD_PLUGIN_MantaView:BOOL=ON \
-    -DMANTA_BUILD=/opt/local/lib/manta \
-    -DMANTA_SOURCE=/opt/local/lib/manta/include
+    -DMANTA_BUILD=${prefix}/lib/manta \
+    -DMANTA_SOURCE=${prefix}/lib/manta/include
 }
 
  configure.post_args ${worksrcpath}
@@ -81,9 +82,9 @@ depends_lib-append    port:python27
 configure.args-append   \
                 -DPYTHON_LIBRARY:FILEPATH=${prefix}/lib/libpython2.7.dylib \
                 -DPYTHON_EXECUTABLE:FILEPATH=${prefix}/bin/python2.7 \
-                -DPYTHON_INCLUDE_DIR:PATH=${frameworks_dir}/Python.framework/Versions/2.7/Headers 
+                -DPYTHON_INCLUDE_DIR:PATH=${frameworks_dir}/Python.framework/Versions/2.7/Headers
 
 
 post-destroot  {
-    file rename ${destroot}${destroot}${prefix}/bin/paraview ${destroot}${prefix}/bin/paraview 
+    file rename ${destroot}${destroot}${prefix}/bin/paraview ${destroot}${prefix}/bin/paraview
 }
