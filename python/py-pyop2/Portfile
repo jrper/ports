@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 132749 2015-02-09 22:07:23Z sean@macports.org $
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           mpi 1.0
+
+
+name                py-pyop2
+master_sites	https://github.com/OP2/PyOP2/archive/
+distname	    master
+extract.suffix  .zip
+use_zip         yes
+worksrcdir	    PyOP2-master
+revision            1
+categories-append   math
+license             BSD
+platforms           darwin
+universal_variant   no
+
+maintainers         sean openmaintainer
+
+checksum.skip       yes
+
+configure.compiler macports-gcc-4.9
+configure.cc    mpicc-openmpi-gcc49
+configure.cxx   mpicxx-openmpi-gcc49
+configure.fc    mpif90-openmpi-gcc49
+configure.f77   mpif77-openmpi-gcc49
+
+build.env-append   PETSC_DIR=${prefix}/lib/petsc-firedrake
+destroot.env-append   PETSC_DIR=${prefix}/lib/petsc-firedrake
+
+python.versions     27 34
+
+if {${subport} ne ${name}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools \
+                    port:py${python.version}-cython
+
+    depends_lib-append \
+                    port:py${python.version}-numpy
+
+    livecheck.type  none
+}
