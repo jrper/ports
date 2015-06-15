@@ -31,6 +31,9 @@ checksum.skip           yes
 depends_build-append  port:cmake port:triangle
 depends_lib-append  port:openmpi-gcc49
 
+patchfiles          patch-src-ctetgen.diff
+
+
 
 configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
@@ -43,9 +46,15 @@ configure.cxx   mpicxx-openmpi-gcc49
 configure.fc    mpif90-openmpi-gcc49
 configure.f77   mpif77-openmpi-gcc49
 
+post-patch  {
+	       xinstall -d ${destroot}${prefix}/include	
+	       xinstall -d ${destroot}${prefix}/lib
+}
+
 configure.pre_args  --prefix=${prefix}/lib/petsc-firedrake
 
-configure.args	--with-python --with-debugging=0 \
+configure.args	LDFLAGS=-L${destroot}${prefix}/lib \
+		--with-python --with-debugging=0 \
 		--with-cc=${configure.cc} \
 		--with-cxx=${configure.cxx} \
 		--with-fc=${configure.fc} \
@@ -56,9 +65,13 @@ configure.args	--with-python --with-debugging=0 \
                 --with-lapack-lib=/usr/lib/liblapack.dylib \
 		--with-blas-lib=/usr/lib/libblas.dylib \
 		--with-triangle-dir=/opt/local/lib/firedrake \
-        	--with-tetgen-dir=/opt/local \
-		--with-chaco-dir=/opt/local \
-		--with-clanguage=cxx
+        	--download-ctetgen \
+		--with-chaco-dir=/opt/local
+
+post-configure {
+	       xinstall -m 755 -W ${worksrcpath}/include ctetgen.h ${destroot}${prefix}/include/	
+	       xinstall -m 755 -W ${worksrcpath}/lib libctetgen.a ${destroot}${prefix}/lib/
+} 
 
 destroot.destdir DESTDIR=${destroot}${prefix}/lib/petsc-firedrake
 
@@ -71,9 +84,6 @@ build.type gnu
 build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
 	       OMPI_FC=${prefix}/bin/gfortran-mp-4.9\
-
-
-
 
 
 
