@@ -1,0 +1,71 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 131539 2015-01-13 21:54:47Z sean@macports.org $
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+
+name                py-ffc-firedrake
+
+categories-append   math science
+license             LGPL-3+
+platforms           darwin
+supported_archs     noarch
+version             1.5.0
+
+master_sites	https://bitbucket.org/mapdes/ffc/get
+distname	master
+extract.suffix  .tar.bz2
+use_bzip2       yes
+worksrcdir      mapdes-ffc-ec5a08f45ee1
+
+description         FEniCS Form Compiler
+long_description    FFC works as a compiler for multilinear forms by generating \
+                    code (C or C++) for the evaluation of a multilinear form given \
+                    in mathematical notation. This new approach to form evaluation \
+                    makes it possible to combine generality with efficiency, the \
+                    form can be given in mathematical notation and the generated \
+                    code is as efficient as hand-optimized code.
+
+checksum.skip       yes
+
+python.versions     27
+python.link_binaries_suffix
+
+configure.compiler macports-gcc-4.9
+
+configure.cc    mpicc-openmpi-gcc49
+configure.cxx   mpicxx-openmpi-gcc49
+configure.fc    mpif90-openmpi-gcc49
+configure.f77   mpif77-openmpi-gcc49
+
+configure.cxxflags-append -std=c++11
+
+if {${subport} ne ${name}} {
+   depends_lib      port:py${python.version}-fiat-firedrake \
+                    port:py${python.version}-ufl-firedrake \
+                    port:py${python.version}-instant \
+                    port:swig-python \
+                    port:boost
+
+    pre-build {
+        build.env-append CXXFLAGS="${configure.cxxflags}"
+    }
+
+    pre-destroot {
+        destroot.env-append CXXFLAGS="${configure.cxxflags}"
+    }
+
+    post-fetch {
+        if {![file exists ${frameworks_dir}/Python.framework/Versions/2.7/lib/python2.7/site-packages/boost/mpi.so]} {
+            return -code error "${name} needs boost installed with a mpi variant "
+        }
+    }
+
+    post-destroot {
+        move ${destroot}${frameworks_dir}/Python.framework/Versions/2.7/share/ufc/ ${destroot}${prefix}/share/ufc
+        reinplace -W ${destroot}${prefix}/share/ufc "s,${frameworks_dir}/Python.framework/Versions/2.7/share/ufc,${prefix}/share/ufc," UFCConfig.cmake
+    }
+
+    livecheck.type  none
+}
