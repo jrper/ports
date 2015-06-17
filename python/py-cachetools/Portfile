@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 135342 2015-04-23 12:24:31Z stromnov@macports.org $
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-cachetools
+set realname        cachetools
+version             1.0.0
+categories-append   devel
+platforms           darwin
+supported_archs     noarch
+
+homepage            https://pypi.python.org/pypi/${realname}/
+
+master_sites        https://pypi.python.org/packages/source/c/${realname}/
+distname            ${realname}-${version}
+checksums           md5 bc7addc2b29a18f6ff7f3c4a7071c41e
+
+python.versions     26 27 33 34
+
+if {${name} ne ${subport}} {
+    depends_lib-append      port:py${python.version}-setuptools
+
+
+    livecheck.type  none
+} else {
+    livecheck.type  regex
+    livecheck.url   https://pypi.python.org/pypi/${realname}/json
+    livecheck.regex "${realname}-(\\d+(\\.\\d+)+)\\${extract.suffix}"
+}
