@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 131539 2015-01-13 21:54:47Z sean@macports.org $
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+
+name                py-firedrake
+
+categories-append   math science
+license             LGPL-3+
+platforms           darwin
+supported_archs     noarch
+version             1.5.0
+
+master_sites	https://github.com/firedrakeproject/firedrake/archive
+distname	master
+extract.suffix  .zip
+use_zip       yes
+worksrcdir      firedrake-master
+
+description         Firedrake
+
+checksum.skip       yes
+
+python.versions     27
+python.link_binaries_suffix
+
+configure.compiler macports-gcc-4.9
+
+configure.cc    mpicc-openmpi-gcc49
+configure.cxx   mpicxx-openmpi-gcc49
+configure.fc    mpif90-openmpi-gcc49
+configure.f77   mpif77-openmpi-gcc49
+
+configure.cxxflags-append -std=c++11
+
+if {${subport} ne ${name}} {
+   depends_lib      port:py${python.version}-ffc-firedrake \
+                    port:py${python.version}-fiat-firedrake \
+                    port:py${python.version}-ufl-firedrake \
+                    port:py${python.version}-instant \
+                    port:swig-python 
+
+    pre-build {
+        build.env-append CXXFLAGS="${configure.cxxflags}" \
+            PETSC_DIR=${prefix}/lib/petsc-firedrake
+    }
+
+    pre-destroot {
+        destroot.env-append CXXFLAGS="${configure.cxxflags}" \
+            PETSC_DIR=${prefix}/lib/petsc-firedrake
+    }
+
+#    post-destroot {
+#        move ${destroot}${frameworks_dir}/Python.framework/Versions/2.7/share/ufc/ ${destroot}${prefix}/share/ufc
+#        reinplace -W ${destroot}${prefix}/share/ufc "s,${frameworks_dir}/Python.framework/Versions/2.7/share/ufc,${prefix}/share/ufc," UFCConfig.cmake
+#    }
+
+    livecheck.type  none
+}
