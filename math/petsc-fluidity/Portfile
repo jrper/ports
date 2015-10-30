@@ -3,7 +3,7 @@
 PortSystem	1.0
 
 name		petsc-fluidity
-version     3.5.3
+version     3.6.1
 categories  math science
 maintainers	jrper
 description	Portable, Extensible Toolkit for Scientific Computation
@@ -25,12 +25,15 @@ worksrcdir	petsc-${version}
 revision         1
 universal_variant   no
 
-checksums           md5 ae5f7a9bd08ce64d451371bcdd0b6f26\
-		    sha1 4c755b3c122f88e38bb5259c748f772545fcaf21
+checksums        md5 907c01021d61d879c9db17f93afd3461
+#   md5 5b6b7129ba02f4c6d107ae7671b80bb8\
+#		    sha1 785fdc4772b2c552ae9b3a20af06c3ea491fded3\
+#		    sha256 8902459bd566a9a1b79bee0bbc15bf6afe53c58fa95c4d89beb7e99e5ca9008e
 
 depends_build-append  port:cmake
 depends_lib-append  port:openmpi-gcc49
 
+pre-configure { file mkdir ${destroot}${prefix}/lib/petsc-fluidity }
 
 configure.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 	       OMPI_CC=${prefix}/bin/gcc-mp-4.9\
@@ -43,13 +46,13 @@ configure.cxx   mpicxx-openmpi-gcc49
 configure.fc    mpif90-openmpi-gcc49
 configure.f77   mpif77-openmpi-gcc49
 
-configure.pre_args  --prefix=${prefix}/lib/petsc-fluidity
+configure.pre_args  --prefix=${destroot}${prefix}/lib/petsc-fluidity
 
-configure.args	--prefix=${prefix}/lib/petsc-fluidity \
+configure.args	--prefix=${destroot}${prefix}/lib/petsc-fluidity\
 		--with-python --with-debugging=0 \
 		--with-pic=fPIC\
 		--with-cc=${configure.cc} \
-		--with-cx=${configure.cxx} \
+		--with-cxx=${configure.cxx} \
 		--with-fc=${configure.fc} \
 		--with-mpiexec=mpiexec-openmpi-gcc49 \
 		--with-shared-libraries=0 \
@@ -64,9 +67,12 @@ configure.args	--prefix=${prefix}/lib/petsc-fluidity \
         	--download-scalapack \
         	--download-mumps \
         	--download-ptscotch \
-		--download-hypre
+		--download-hypre \
+
+configure.cmd  ./configure 
 
 use_parallel_build  no
+build.pre_args {}
 build.args     MAKE_NP=4
 
 build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
@@ -75,7 +81,15 @@ build.env-append      OMPI_CXX=${prefix}/bin/g++-mp-4.9\
 
 
 
-destroot.destdir DESTDIR=${destroot}${prefix}/lib/petsc-fluidity
+#destroot.destdir DESTDIR=${destroot}${prefix}/lib/petsc-fluidity
+destroot.post_args {}
+
+post-destroot {
+	      reinplace -W ${destroot}${prefix}/lib/petsc-fluidity/include "s,${destroot},,g" petscconf.h petscconfiginfo.h petscmachineinfo.h
+	      reinplace -W ${destroot}${prefix}/lib/petsc-fluidity/lib/petsc/conf "s,${destroot},,g" variables petscvariables rules petscrules hypre metis MUMPS parmetis PETScConfig.cmake RDict.db reconfigure-arch-darwin-c-opt.py uninstall.py
+reinplace "s,${destroot},,g" ${destroot}${prefix}/lib/petsc-fluidity/lib/pkgconfig/PETSc.pc
+reinplace "s,${destroot},,g" ${destroot}${prefix}/lib/petsc-fluidity/lib/petsc/conf/modules/petsc/${version}
+}
 
 
 # disabled for now; no mpi support in fftw port yet
