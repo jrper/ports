@@ -3,6 +3,9 @@
 
 PortSystem          1.0
 PortGroup           cmake 1.0
+PortGroup           mpi 1.0 
+
+compilers.choose        cc cxx
 
 name                vtk5
 version             5.10.1
@@ -47,6 +50,18 @@ post-patch {
     # Xcode 5.1 breaks vtk build. A backwards compatible fix is to remove
     # -fobjc-gc; see http://review.source.kitware.com/#/c/14424/
     reinplace -W ${worksrcpath} "s,-fobjc-gc,,g" CMakeLists.txt
+}
+
+variant mpi description {compile with mpi support} {
+
+configure.compiler clang
+
+configure.args-append \
+    -DVTK_USE_MPI:BOOL=ON\
+                    -DCMAKE_C_COMPILER=${configure.cc} \
+                    -DCMAKE_CXX_COMPILER=${configure.cxx} \
+                    -DMPI_C_COMPILER=mpicc-openmpi-clang \
+                    -DMPI_CXX_COMPILER=mpicxx-openmpi-clang
 }
 
 configure.args-append  \
